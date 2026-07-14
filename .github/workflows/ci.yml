@@ -160,6 +160,10 @@ jobs:
       - name: Accept Android licenses
         run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
 
+      - name: Regenerate Gradle Wrapper
+        working-directory: artifacts/tais/android
+        run: gradle wrapper --gradle-version 8.7 --distribution-type bin
+
       - name: Make gradlew executable
         working-directory: artifacts/tais/android
         run: chmod +x gradlew
@@ -215,6 +219,10 @@ jobs:
 
       - name: Accept Android licenses
         run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+
+      - name: Regenerate Gradle Wrapper
+        working-directory: artifacts/tais/android
+        run: gradle wrapper --gradle-version 8.7 --distribution-type bin
 
       - name: Make gradlew executable
         working-directory: artifacts/tais/android
