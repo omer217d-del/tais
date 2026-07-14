@@ -162,6 +162,10 @@ jobs:
       - name: Accept Android licenses
         run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
 
+      - name: Make gradlew executable
+        working-directory: android
+        run: chmod +x gradlew
+
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
@@ -188,6 +192,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: capacitor-sync
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    env:
+      KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -210,6 +219,10 @@ jobs:
       - name: Accept Android licenses
         run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
 
+      - name: Make gradlew executable
+        working-directory: android
+        run: chmod +x gradlew
+
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
@@ -220,9 +233,9 @@ jobs:
           restore-keys: gradle-${{ runner.os }}-
 
       - name: Decode keystore
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
+        if: env.KEYSTORE_BASE64 != ''
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/keystore.jks
+          echo "$KEYSTORE_BASE64" | base64 -d > android/app/keystore.jks
 
       - name: Build Release APK (unsigned if no keystore)
         working-directory: android
@@ -230,9 +243,9 @@ jobs:
           if [ -f "app/keystore.jks" ]; then
             ./gradlew assembleRelease \
               -Pandroid.injected.signing.store.file=keystore.jks \
-              -Pandroid.injected.signing.store.password="${{ secrets.KEYSTORE_PASSWORD }}" \
-              -Pandroid.injected.signing.key.alias="${{ secrets.KEY_ALIAS }}" \
-              -Pandroid.injected.signing.key.password="${{ secrets.KEY_PASSWORD }}" \
+              -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
+              -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
+              -Pandroid.injected.signing.key.password="$KEY_PASSWORD" \
               --stacktrace
           else
             ./gradlew assembleRelease --stacktrace
