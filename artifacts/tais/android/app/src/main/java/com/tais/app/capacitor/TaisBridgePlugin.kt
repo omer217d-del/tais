@@ -31,12 +31,12 @@ import kotlinx.coroutines.launch
 class TaisBridgePlugin : Plugin() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private lateinit var bridge: AndroidBridge
+    private lateinit var androidBridge: AndroidBridge
     private lateinit var validator: AutomationValidator
     private lateinit var llamaManager: LlamaManager
 
     override fun load() {
-        bridge = AndroidBridge(context)
+        androidBridge = AndroidBridge(context)
         validator = AutomationValidator(context)
         llamaManager = LlamaManager(context)
     }
@@ -132,7 +132,7 @@ class TaisBridgePlugin : Plugin() {
         }
 
         scope.launch(Dispatchers.IO) {
-            val result = bridge.executeAction(action)
+            val result = androidBridge.executeAction(action)
             activity.runOnUiThread {
                 when (result) {
                     is com.tais.app.model.ExecutionResult.Success ->

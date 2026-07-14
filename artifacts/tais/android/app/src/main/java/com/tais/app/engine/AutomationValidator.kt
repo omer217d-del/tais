@@ -128,12 +128,6 @@ class AutomationValidator(private val context: Context) {
                 if (!time.matches(Regex("\\d{2}:\\d{2}"))) return "Time must be in HH:mm format"
                 null
             }
-            TriggerType.HTTP_REQUEST -> {
-                val url = trigger.parameters["url"] as? String
-                    ?: return "HTTP trigger requires 'url' parameter"
-                if (!url.startsWith("https://")) return "HTTP trigger URL must use HTTPS"
-                null
-            }
             else -> null
         }
     }
