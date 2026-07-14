@@ -131,7 +131,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: android-synced
-          path: android/
+          path: artifacts/tais/android/
           retention-days: 1
 
   android-debug:
@@ -146,7 +146,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: android-synced
-          path: android/
+          path: artifacts/tais/android/
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -161,7 +161,7 @@ jobs:
         run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
 
       - name: Make gradlew executable
-        working-directory: android
+        working-directory: artifacts/tais/android
         run: chmod +x gradlew
 
       - name: Cache Gradle
@@ -174,14 +174,14 @@ jobs:
           restore-keys: gradle-${{ runner.os }}-
 
       - name: Build Debug APK
-        working-directory: android
+        working-directory: artifacts/tais/android
         run: ./gradlew assembleDebug --stacktrace
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: tais-debug-${{ github.sha }}
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: artifacts/tais/android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
 
   android-release:
@@ -202,7 +202,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: android-synced
-          path: android/
+          path: artifacts/tais/android/
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -217,7 +217,7 @@ jobs:
         run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
 
       - name: Make gradlew executable
-        working-directory: android
+        working-directory: artifacts/tais/android
         run: chmod +x gradlew
 
       - name: Cache Gradle
@@ -231,10 +231,10 @@ jobs:
 
       - name: Decode keystore
         if: env.KEYSTORE_BASE64 != ''
-        run: echo "$KEYSTORE_BASE64" | base64 -d > android/app/keystore.jks
+        run: echo "$KEYSTORE_BASE64" | base64 -d > artifacts/tais/android/app/keystore.jks
 
       - name: Build Release APK
-        working-directory: android
+        working-directory: artifacts/tais/android
         run: |
           if [ -f "app/keystore.jks" ]; then
             ./gradlew assembleRelease -Pandroid.injected.signing.store.file=keystore.jks -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" -Pandroid.injected.signing.key.alias="$KEY_ALIAS" -Pandroid.injected.signing.key.password="$KEY_PASSWORD" --stacktrace
@@ -246,7 +246,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tais-release-${{ github.sha }}
-          path: android/app/build/outputs/apk/release/app-release*.apk
+          path: artifacts/tais/android/app/build/outputs/apk/release/app-release*.apk
           retention-days: 90
 
   release:
@@ -268,7 +268,7 @@ jobs:
 
       - name: Extract version
         id: version
-        run: echo "VERSION=$(grep 'versionName' android/app/build.gradle | sed 's/.*versionName "\(.*\)"/\1/')" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(grep 'versionName' artifacts/tais/android/app/build.gradle | sed 's/.*versionName "\(.*\)"/\1/')" >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
