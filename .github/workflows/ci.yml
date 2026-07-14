@@ -160,6 +160,11 @@ jobs:
       - name: Accept Android licenses
         run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
 
+      - name: Setup Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
+
       - name: Regenerate Gradle Wrapper
         working-directory: artifacts/tais/android
         run: gradle wrapper --gradle-version 8.7 --distribution-type bin
@@ -219,6 +224,11 @@ jobs:
 
       - name: Accept Android licenses
         run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+
+      - name: Setup Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
 
       - name: Regenerate Gradle Wrapper
         working-directory: artifacts/tais/android
