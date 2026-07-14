@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TAIS</string>
+    <string name="title_activity_main">TAIS — Terminal AI System</string>
+
+    <!-- Service Notifications -->
+    <string name="tais_service_notification_title">TAIS çalışıyor</string>
+    <string name="tais_service_notification_text">Otomasyon motoru aktif — tetikleyiciler izleniyor</string>
+    <string name="tais_notification_channel_name">TAIS Otomasyon Bildirimleri</string>
+    <string name="tais_service_channel_name">TAIS Arka Plan Servisi</string>
+
+    <!-- Permission Rationales -->
+    <string name="rationale_battery">Batarya seviyesi otomasyonları için gerekli.</string>
+    <string name="rationale_location">Konum tabanlı otomasyonlar için gerekli.</string>
+    <string name="rationale_camera">El feneri kontrolü için gerekli.</string>
+    <string name="rationale_microphone">Sesli komut ve TTS için gerekli.</string>
+    <string name="rationale_bluetooth">Bluetooth tetikleyicileri için gerekli.</string>
+    <string name="rationale_notification">Otomasyon bildirimleri için gerekli.</string>
+    <string name="rationale_storage">Model dosyalarını okumak için gerekli.</string>
+
+    <!-- Confirmation Dialogs -->
+    <string name="confirm_dangerous_action">Bu işlemi gerçekleştirmek istiyor musunuz?</string>
+    <string name="confirm_delete_automation">Bu otomasyonu silmek istiyor musunuz?</string>
+    <string name="btn_confirm">Onayla</string>
+    <string name="btn_cancel">İptal</string>
+</resources>
