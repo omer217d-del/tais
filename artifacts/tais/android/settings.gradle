@@ -1,6 +1,0 @@
-include ':app'
-
-// Capacitor Android (installed via npm)
-def capacitorAndroidDir = new File(['node', '--print', "require.resolve('@capacitor/android/package.json')"].execute().text.trim()).parent
-include ':capacitor-android'
-project(':capacitor-android').projectDir = new File(capacitorAndroidDir, 'capacitor')

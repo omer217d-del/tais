@@ -17,7 +17,7 @@ function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center h-full text-primary font-mono space-y-4">
       <div className="text-6xl font-bold">404</div>
-      <div className="text-xl">DESTINATION_NOT_FOUND</div>
+      <div className="text-xl">SAYFA_BULUNAMADI</div>
     </div>
   );
 }
@@ -56,7 +56,7 @@ function App() {
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
             <Router />
           </WouterRouter>
-          <Toaster theme="dark" className="font-mono" />
+          <Toaster theme="dark" />
         </TooltipProvider>
       </QueryClientProvider>
     </ErrorBoundary>

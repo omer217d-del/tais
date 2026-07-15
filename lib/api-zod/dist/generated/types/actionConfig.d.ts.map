@@ -1,0 +1,1 @@
+{"version":3,"file":"actionConfig.d.ts","sourceRoot":"","sources":["../../../src/generated/types/actionConfig.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AACH,OAAO,KAAK,EAAE,sBAAsB,EAAE,MAAM,0BAA0B,CAAC;AACvE,OAAO,KAAK,EAAE,gBAAgB,EAAE,MAAM,oBAAoB,CAAC;AAE3D,MAAM,WAAW,YAAY;IAC3B,IAAI,EAAE,gBAAgB,CAAC;IACvB,UAAU,CAAC,EAAE,sBAAsB,CAAC;CACrC"}

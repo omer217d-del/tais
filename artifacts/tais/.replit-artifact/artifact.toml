@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "TAIS"
+version = "1.0.0"
+id = "artifacts/tais"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22441
+
+[services.development]
+run = "pnpm --filter @workspace/tais run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/tais", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/tais/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22441"
+BASE_PATH = "/"
