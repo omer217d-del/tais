@@ -77,7 +77,7 @@ export default function LogsPage() {
         {stats && (
           <div className="flex gap-2 text-xs overflow-x-auto pb-2 scrollbar-hide">
             <button onClick={() => setFilterLevel(null)} className={`px-3 py-1 rounded border ${!filterLevel ? 'bg-primary/20 border-primary text-primary' : 'bg-card border-border text-muted-foreground hover:bg-secondary'}`}>ALL ({stats.total})</button>
-            <button onClick={() => setFilterLevel('error')} className={`px-3 py-1 rounded border flex items-center gap-1 ${filterLevel === 'error' ? 'bg-destructive/20 border-destructive text-destructive' : 'bg-card border-border text-destructive hover:bg-destructive/10'}`}>ERRORS ({stats.byLevel.error})</button>
+            <button onClick={() => setFilterLevel('error')} className={`px-3 py-1 rounded border flex items-center gap-1 ${filterLevel === 'error' ? 'bg-destructive/20 border-destructive text-destructive' : 'bg-card border-border text-destructive hover:bg-destructive/10'}`}>ERRORS ({stats?.byLevel?.error || 0})</button>
             <button onClick={() => setFilterLevel('warn')} className={`px-3 py-1 rounded border flex items-center gap-1 ${filterLevel === 'warn' ? 'bg-yellow-500/20 border-yellow-500 text-yellow-500' : 'bg-card border-border text-yellow-500 hover:bg-yellow-500/10'}`}>WARNINGS ({stats.byLevel.warn})</button>
             <button onClick={() => setFilterLevel('info')} className={`px-3 py-1 rounded border flex items-center gap-1 ${filterLevel === 'info' ? 'bg-blue-400/20 border-blue-400 text-blue-400' : 'bg-card border-border text-blue-400 hover:bg-blue-400/10'}`}>INFO ({stats.byLevel.info})</button>
           </div>
