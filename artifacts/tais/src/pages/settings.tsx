@@ -124,7 +124,7 @@ export default function SettingsPage() {
             <div className="space-y-4">
               <div className="flex justify-between items-center text-sm">
                 <span className="font-bold">TEMPERATURE</span>
-                <Badge variant="outline" className="text-primary border-primary/50">{tempParams.temperature.toFixed(2)}</Badge>
+                <Badge variant="outline" className="text-primary border-primary/50">{((tempParams?.temperature || 0).toFixed(2))}</Badge>
               </div>
               <Slider 
                 value={[tempParams.temperature]} 

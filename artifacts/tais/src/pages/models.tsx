@@ -82,7 +82,7 @@ export default function ModelsPage() {
   const formatBytes = (bytes: number) => {
     if (!bytes) return "Unknown";
     const gb = bytes / (1024 * 1024 * 1024);
-    return `${gb.toFixed(2)} GB`;
+    return `${((gb || 0).toFixed(2))} GB`;
   };
 
   const isWizardMode = activeModelError && (activeModelError as any)?.response?.status === 404;
