@@ -5,6 +5,9 @@ import android.os.Bundle
 import com.getcapacitor.BridgeActivity
 import com.tais.app.capacitor.TaisBridgePlugin
 import com.tais.app.service.TaisService
+import com.tais.app.util.CrashLogger
+
+private const val TAG = "MainActivity"
 
 /**
  * MainActivity — TAIS application entry point.
@@ -15,9 +18,21 @@ import com.tais.app.service.TaisService
 class MainActivity : BridgeActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        registerPlugin(TaisBridgePlugin::class.java)
+        CrashLogger.install(this)
+        CrashLogger.log(this, TAG, "onCreate: start")
+
+        try {
+            registerPlugin(TaisBridgePlugin::class.java)
+            CrashLogger.log(this, TAG, "onCreate: plugin registered")
+        } catch (e: Exception) {
+            CrashLogger.logError(this, TAG, "onCreate: plugin registration failed", e)
+        }
+
         super.onCreate(savedInstanceState)
+        CrashLogger.log(this, TAG, "onCreate: super.onCreate finished")
+
         startTaisService()
+        CrashLogger.log(this, TAG, "onCreate: end")
     }
 
     override fun onDestroy() {
@@ -26,11 +41,16 @@ class MainActivity : BridgeActivity() {
     }
 
     private fun startTaisService() {
-        val serviceIntent = Intent(this, TaisService::class.java)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            startForegroundService(serviceIntent)
-        } else {
-            startService(serviceIntent)
+        try {
+            val serviceIntent = Intent(this, TaisService::class.java)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                startForegroundService(serviceIntent)
+            } else {
+                startService(serviceIntent)
+            }
+            CrashLogger.log(this, TAG, "startTaisService: service start requested")
+        } catch (e: Exception) {
+            CrashLogger.logError(this, TAG, "startTaisService: failed to start service", e)
         }
     }
 }

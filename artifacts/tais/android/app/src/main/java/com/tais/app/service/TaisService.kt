@@ -15,6 +15,7 @@ import com.tais.app.bridge.AndroidBridge
 import com.tais.app.engine.AutomationEngine
 import com.tais.app.engine.AutomationValidator
 import com.tais.app.model.ExecutionResult
+import com.tais.app.util.CrashLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -39,34 +40,73 @@ class TaisService : Service() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    private lateinit var bridge: AndroidBridge
-    private lateinit var validator: AutomationValidator
-    private lateinit var engine: AutomationEngine
-    private lateinit var llamaManager: LlamaManager
-    private lateinit var parser: AutomationParser
+    private var bridge: AndroidBridge? = null
+    private var validator: AutomationValidator? = null
+    private var engine: AutomationEngine? = null
+    private var llamaManager: LlamaManager? = null
+    private var parser: AutomationParser? = null
 
     override fun onCreate() {
         super.onCreate()
-        Log.i(TAG, "TaisService creating")
+        CrashLogger.log(this, TAG, "onCreate: start")
 
-        setupNotificationChannel()
-        startForeground(SERVICE_NOTIFICATION_ID, buildServiceNotification())
+        try {
+            setupNotificationChannel()
+            startForeground(SERVICE_NOTIFICATION_ID, buildServiceNotification())
+            CrashLogger.log(this, TAG, "onCreate: foreground notification shown")
+        } catch (e: Exception) {
+            CrashLogger.logError(this, TAG, "onCreate: failed to start foreground", e)
+        }
 
-        bridge = AndroidBridge(this)
-        validator = AutomationValidator(this)
-        llamaManager = LlamaManager(this)
-        parser = AutomationParser()
+        try {
+            bridge = AndroidBridge(this)
+            CrashLogger.log(this, TAG, "onCreate: AndroidBridge created")
+        } catch (e: Exception) {
+            CrashLogger.logError(this, TAG, "onCreate: AndroidBridge creation failed", e)
+        }
 
-        engine = AutomationEngine(
-            context = this,
-            bridge = bridge,
-            validator = validator,
-            onExecutionComplete = { automationId, result ->
-                onAutomationExecuted(automationId, result)
+        try {
+            validator = AutomationValidator(this)
+            CrashLogger.log(this, TAG, "onCreate: AutomationValidator created")
+        } catch (e: Exception) {
+            CrashLogger.logError(this, TAG, "onCreate: AutomationValidator creation failed", e)
+        }
+
+        try {
+            llamaManager = LlamaManager(this)
+            CrashLogger.log(this, TAG, "onCreate: LlamaManager created")
+        } catch (e: Exception) {
+            CrashLogger.logError(this, TAG, "onCreate: LlamaManager creation failed", e)
+        }
+
+        try {
+            parser = AutomationParser()
+            CrashLogger.log(this, TAG, "onCreate: AutomationParser created")
+        } catch (e: Exception) {
+            CrashLogger.logError(this, TAG, "onCreate: AutomationParser creation failed", e)
+        }
+
+        val currentBridge = bridge
+        val currentValidator = validator
+        if (currentBridge != null && currentValidator != null) {
+            try {
+                engine = AutomationEngine(
+                    context = this,
+                    bridge = currentBridge,
+                    validator = currentValidator,
+                    onExecutionComplete = { automationId, result ->
+                        onAutomationExecuted(automationId, result)
+                    }
+                )
+                CrashLogger.log(this, TAG, "onCreate: AutomationEngine created")
+            } catch (e: Exception) {
+                CrashLogger.logError(this, TAG, "onCreate: AutomationEngine creation failed", e)
             }
-        )
+        } else {
+            CrashLogger.log(this, TAG, "onCreate: skipping AutomationEngine (bridge or validator missing)")
+        }
 
-        Log.i(TAG, "TaisService created successfully")
+        CrashLogger.log(this, TAG, "onCreate: finished successfully")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -80,11 +120,15 @@ class TaisService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
-        Log.i(TAG, "TaisService destroying")
-        engine.shutdown()
-        bridge.destroy()
-        llamaManager.unloadModel()
-        serviceScope.cancel()
+        CrashLogger.log(this, TAG, "onDestroy: start")
+        try {
+            engine?.shutdown()
+            bridge?.destroy()
+            llamaManager?.unloadModel()
+            serviceScope.cancel()
+        } catch (e: Exception) {
+            CrashLogger.logError(this, TAG, "onDestroy: cleanup failed", e)
+        }
         super.onDestroy()
     }
 

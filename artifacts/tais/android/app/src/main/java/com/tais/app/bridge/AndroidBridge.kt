@@ -29,6 +29,7 @@ import com.tais.app.model.TriggerType
 import com.tais.app.triggers.BatteryTriggerHandler
 import com.tais.app.triggers.MotionTriggerHandler
 import com.tais.app.triggers.TimeTriggerHandler
+import com.tais.app.util.CrashLogger
 import java.util.Locale
 
 private const val TAG = "AndroidBridge"
@@ -56,9 +57,21 @@ class AndroidBridge(private val context: Context) {
     private val timeTrigger = TimeTriggerHandler(context)
 
     init {
-        setupNotificationChannel()
-        setupTts()
-        setupCamera()
+        try {
+            setupNotificationChannel()
+        } catch (e: Exception) {
+            CrashLogger.logError(context, TAG, "setupNotificationChannel failed", e)
+        }
+        try {
+            setupTts()
+        } catch (e: Exception) {
+            CrashLogger.logError(context, TAG, "setupTts failed", e)
+        }
+        try {
+            setupCamera()
+        } catch (e: Exception) {
+            CrashLogger.logError(context, TAG, "setupCamera failed", e)
+        }
     }
 
     // ─── Trigger Registration ─────────────────────────────────────────────
@@ -344,6 +357,10 @@ class AndroidBridge(private val context: Context) {
             }
         } catch (e: CameraAccessException) {
             Log.w(TAG, "Camera setup failed: ${e.message}")
+        } catch (e: SecurityException) {
+            // CAMERA permission not yet granted at runtime — safe to skip,
+            // flashlight action will simply be unavailable until granted.
+            Log.w(TAG, "Camera setup skipped — permission not granted: ${e.message}")
         }
     }
 
