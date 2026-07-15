@@ -199,7 +199,7 @@ export default function ModelsPage() {
 
         <h2 className="text-lg font-bold text-foreground border-b border-border pb-2 pt-4">SUPPORTED MODELS (DOWNLOAD)</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {supportedModels?.map(sm => (
+          {(Array.isArray(supportedModels) ? supportedModels : []).map(sm => (
             <Card key={sm.id} className="bg-card/30 border-border/50 hover:border-border transition-colors">
               <CardContent className="p-5 flex flex-col h-full">
                 <div className="flex justify-between items-start mb-3">

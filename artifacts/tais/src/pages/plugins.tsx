@@ -54,7 +54,7 @@ export default function PluginsPage() {
           </div>
         ) : (
           <AnimatePresence>
-            {plugins?.map((plugin, i) => (
+            {(Array.isArray(plugins) ? plugins : []).map((plugin, i) => (
               <motion.div
                 key={plugin.id}
                 initial={{ opacity: 0, y: 20 }}

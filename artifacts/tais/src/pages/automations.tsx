@@ -100,7 +100,7 @@ export default function AutomationsPage() {
           </div>
         ) : (
           <AnimatePresence>
-            {automations?.map((auto, i) => (
+            {(Array.isArray(automations) ? automations : []).map((auto, i) => (
               <motion.div
                 key={auto.id}
                 initial={{ opacity: 0, y: 20 }}
