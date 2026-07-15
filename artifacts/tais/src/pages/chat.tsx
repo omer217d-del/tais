@@ -76,7 +76,7 @@ export default function ChatPage() {
           </div>
         ) : (
           <AnimatePresence initial={false}>
-            {(messages || []).map((msg, i) => (
+            {(Array.isArray(messages) ? messages : []).map((msg, i) => (
               <motion.div
                 key={msg.id}
                 initial={{ opacity: 0, y: 10 }}
