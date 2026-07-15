@@ -89,14 +89,14 @@ export default function LogsPage() {
           Array.from({ length: 15 }).map((_, i) => (
             <Skeleton key={i} className="h-6 w-full bg-card/20 rounded-none mb-1" />
           ))
-        ) : !logsData?.items || logsData.items.length === 0 ? (
+        ) : !Array.isArray(logsData?.items) || logsData.items.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-muted-foreground opacity-50">
             <Activity size={48} className="mb-4" />
             <p>No log entries found.</p>
           </div>
         ) : (
           <div className="text-[11px] sm:text-xs font-mono">
-            {logsData.items.map(log => (
+            {(logsData?.items || []).map(log => (
               <div key={log.id} className={`flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-3 p-1.5 border-b border-white/5 hover:bg-white/5 transition-colors ${getLevelColor(log.level)}`}>
                 <div className="flex items-center gap-2 shrink-0 sm:w-44 text-muted-foreground opacity-70">
                   {getLevelIcon(log.level)}
