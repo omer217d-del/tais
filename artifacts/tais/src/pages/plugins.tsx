@@ -89,7 +89,7 @@ export default function PluginsPage() {
                         <div className="flex items-start gap-2 text-xs">
                           <ShieldAlert size={14} className="text-destructive/80 mt-0.5 shrink-0" />
                           <div className="flex flex-wrap gap-1">
-                            {plugin.manifest.permissions.map(p => (
+                            {(Array.isArray(plugin.manifest.permissions) ? plugin.manifest.permissions : []).map(p => (
                               <span key={p} className="bg-destructive/10 text-destructive px-1.5 py-0.5 rounded text-[10px]">{p.split('.').pop()}</span>
                             ))}
                           </div>
@@ -100,7 +100,7 @@ export default function PluginsPage() {
                         <div className="space-y-1">
                           <div className="text-[10px] text-muted-foreground flex items-center gap-1"><Zap size={10}/> TRIGGERS ({plugin.manifest.triggers.length})</div>
                           <div className="flex flex-wrap gap-1">
-                            {plugin.manifest.triggers.slice(0, 3).map(t => (
+                            {(Array.isArray(plugin.manifest.triggers) ? plugin.manifest.triggers.slice(0, 3) : []).map(t => (
                               <span key={t} className="text-xs bg-yellow-500/10 text-yellow-500/80 px-1.5 py-0.5 rounded border border-yellow-500/20">{t}</span>
                             ))}
                             {plugin.manifest.triggers.length > 3 && <span className="text-xs text-muted-foreground">+{plugin.manifest.triggers.length - 3} more</span>}
@@ -109,7 +109,7 @@ export default function PluginsPage() {
                         <div className="space-y-1">
                           <div className="text-[10px] text-muted-foreground flex items-center gap-1"><Play size={10}/> ACTIONS ({plugin.manifest.actions.length})</div>
                           <div className="flex flex-wrap gap-1">
-                            {plugin.manifest.actions.slice(0, 3).map(a => (
+                            {(Array.isArray(plugin.manifest.actions) ? plugin.manifest.actions.slice(0, 3) : []).map(a => (
                               <span key={a} className="text-xs bg-green-500/10 text-green-500/80 px-1.5 py-0.5 rounded border border-green-500/20">{a}</span>
                             ))}
                             {plugin.manifest.actions.length > 3 && <span className="text-xs text-muted-foreground">+{plugin.manifest.actions.length - 3} more</span>}

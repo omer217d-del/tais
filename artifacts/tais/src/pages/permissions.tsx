@@ -82,7 +82,7 @@ export default function PermissionsPage() {
               </h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {perms.map(perm => (
+                {((Array.isArray(perms) ? perms : [])).map(perm => (
                   <Card key={perm.id} className={`border ${getCategoryColor(category)} transition-colors`}>
                     <CardContent className="p-4 flex flex-col h-full justify-between gap-4">
                       <div className="flex items-start justify-between gap-2">

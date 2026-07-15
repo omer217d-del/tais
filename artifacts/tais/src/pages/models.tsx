@@ -162,7 +162,7 @@ export default function ModelsPage() {
         
         {models && models.length > 0 && (
           <div className="grid grid-cols-1 gap-4 mb-8">
-            {models.map(model => (
+            {((Array.isArray(models) ? models : [])).map(model => (
               <Card key={model.id} className={`border ${model.isActive ? 'border-primary shadow-[0_0_10px_rgba(0,255,255,0.1)]' : 'border-border'} bg-card/50`}>
                 <CardContent className="p-4 flex items-center justify-between">
                   <div>
