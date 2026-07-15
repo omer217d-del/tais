@@ -9,7 +9,7 @@
  * AutomationValidator before execution.
  */
 
-import { Capacitor } from "@capacitor/core";
+import { Capacitor, registerPlugin } from "@capacitor/core";
 
 // ─── Type Definitions ──────────────────────────────────────────────────────
 
@@ -99,6 +99,20 @@ export const isAndroid = (): boolean =>
 // ─── Bridge Proxy ─────────────────────────────────────────────────────────
 
 /**
+ * Native TaisBridge plugin handle.
+ *
+ * NOTE: `Capacitor.Plugins` was deprecated in Capacitor 3 and fully removed
+ * in Capacitor 4+. This app uses Capacitor 6, so plugins must be obtained
+ * via `registerPlugin()` instead. The old `Plugins["TaisBridge"]` lookup
+ * always resolved to `undefined`, which meant every single bridge call
+ * (getDeviceInfo, loadModel, runInference, ...) threw a TypeError as soon
+ * as it was invoked on a real device.
+ */
+const TaisBridgeNative = registerPlugin<Record<string, (args: unknown) => Promise<unknown>>>(
+  "TaisBridge"
+);
+
+/**
  * Safe bridge proxy — falls back to mock responses on web.
  * On Android, delegates to the Kotlin TAIS Bridge plugin.
  */
@@ -110,17 +124,13 @@ async function callBridge<T = BridgeResult>(
     return mockBridgeCall<T>(method, args);
   }
 
-  const { Plugins } = await import("@capacitor/core");
-  const plugin = (Plugins as Record<string, unknown>)["TaisBridge"] as Record<
-    string,
-    (args: unknown) => Promise<T>
-  >;
+  const fn = TaisBridgeNative[method];
 
-  if (!plugin || typeof plugin[method] !== "function") {
+  if (typeof fn !== "function") {
     throw new Error(`Bridge method not found: ${method}`);
   }
 
-  return plugin[method](args);
+  return fn(args) as Promise<T>;
 }
 
 // ─── Mock Bridge (Web fallback) ────────────────────────────────────────────
